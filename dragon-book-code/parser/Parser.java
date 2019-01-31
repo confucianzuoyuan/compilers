@@ -19,7 +19,7 @@ public class Parser {
     }
 
     void move() throws IOException {
-        look = lex.scan(); // 词法分析器向前扫描一个字符
+        look = lex.scan(); // 词法分析器向前扫描一个词法单元
     }
 
     void error(String s) {
@@ -28,7 +28,7 @@ public class Parser {
 
     void match(int t) throws IOException {
         if (look.tag == t) {
-            move(); // 如果匹配，继续扫描下一个词
+            move(); // 如果匹配，继续扫描下一个词法单元
         } else {
             error("syntax error");
         }
