@@ -13,7 +13,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("Hello %s! This is the Monkey programming language!\n", user.Username)
-	fmt.Printf("Feel free to type in commands\n")
+	fmt.Printf("你好 %s! 这是左元用Golang写的解释器！\n", user.Username)
+	fmt.Printf("开始写代码吧！\n")
 	repl.Start(os.Stdin, os.Stdout)
 }
