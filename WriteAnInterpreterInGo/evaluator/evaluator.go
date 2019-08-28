@@ -67,10 +67,6 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return function
 		}
 		args := evalExpressions(node.Arguments, env)
-		for _, arg := range args {
-			fmt.Printf(arg.Inspect())
-			fmt.Println()
-		}
 		if len(args) == 1 && isError(args[0]) {
 			return args[0]
 		}
