@@ -8,6 +8,7 @@ import (
 	"../code"
 	"../compiler"
 	"../lexer"
+	"../object"
 	"../parser"
 	"../vm"
 )
@@ -30,6 +31,10 @@ const MONKEY_FACE = `            __,__
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
 	// env := object.NewEnvironment()
+
+	constants := []object.Object{}
+	globals := make([]object.Object, vm.GlobalsSize)
+	symbolTable := compiler.NewSymbolTable()
 
 	for {
 		fmt.Printf(PROMPT)
@@ -54,12 +59,15 @@ func Start(in io.Reader, out io.Writer) {
 		// 	io.WriteString(out, "\n")
 		// }
 
-		comp := compiler.New()
+		comp := compiler.NewWithState(symbolTable, constants)
 		err := comp.Compile(program)
 		if err != nil {
 			fmt.Fprintf(out, "Woops! Compilation failed:\n %s\n", err)
 			continue
 		}
+
+		code1 := comp.Bytecode()
+		constants = code1.Constants
 
 		concatted := code.Instructions{}
 		for _, ins := range comp.Bytecode().Instructions {
@@ -67,7 +75,8 @@ func Start(in io.Reader, out io.Writer) {
 		}
 		fmt.Printf(concatted.String())
 
-		machine := vm.New(comp.Bytecode())
+		// machine := vm.New(comp.Bytecode())
+		machine := vm.NewWithGlobalsStore(code1, globals)
 
 		err = machine.Run()
 		if err != nil {
