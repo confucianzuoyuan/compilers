@@ -122,14 +122,14 @@ func (vm *VM) Run() error {
 			}
 		case code.OpJump:
 			pos := int(code.ReadUint16(ins[ip+1:]))
-			ip = pos - 1
+			vm.currentFrame().ip = pos - 1
 		case code.OpJumpNotTruthy:
 			pos := int(code.ReadUint16(ins[ip+1:]))
-			ip += 2
+			vm.currentFrame().ip += 2
 
 			condition := vm.pop()
 			if !isTruthy(condition) {
-				ip = pos - 1
+				vm.currentFrame().ip = pos - 1
 			}
 		case code.OpNull:
 			err := vm.push(Null)
@@ -138,12 +138,12 @@ func (vm *VM) Run() error {
 			}
 		case code.OpSetGlobal:
 			globalIndex := code.ReadUint16(ins[ip+1:])
-			ip += 2
+			vm.currentFrame().ip += 2
 
 			vm.globals[globalIndex] = vm.pop()
 		case code.OpGetGlobal:
 			globalIndex := code.ReadUint16(ins[ip+1:])
-			ip += 2
+			vm.currentFrame().ip += 2
 
 			err := vm.push(vm.globals[globalIndex])
 			if err != nil {
@@ -151,7 +151,7 @@ func (vm *VM) Run() error {
 			}
 		case code.OpArray:
 			numElements := int(code.ReadUint16(ins[ip+1:]))
-			ip += 2
+			vm.currentFrame().ip += 2
 
 			array := vm.buildArray(vm.sp-numElements, vm.sp)
 			vm.sp = vm.sp - numElements
@@ -162,7 +162,7 @@ func (vm *VM) Run() error {
 			}
 		case code.OpHash:
 			numElements := int(code.ReadUint16(ins[ip+1:]))
-			ip += 2
+			vm.currentFrame().ip += 2
 
 			hash, err := vm.buildHash(vm.sp-numElements, vm.sp)
 			if err != nil {
