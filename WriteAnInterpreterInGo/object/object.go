@@ -225,7 +225,9 @@ type Hashable interface {
 }
 
 type CompiledFunction struct {
-	Instructions code.Instructions
+	Instructions  code.Instructions
+	NumLocals     int
+	NumParameters int
 }
 
 func (cf *CompiledFunction) Type() ObjectType {
