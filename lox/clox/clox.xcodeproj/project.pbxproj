@@ -12,6 +12,7 @@
 		26B6C4B9239B6E5800304B8E /* chunk.c in Sources */ = {isa = PBXBuildFile; fileRef = 26B6C4B8239B6E5800304B8E /* chunk.c */; };
 		26B6C4BC239B6E9B00304B8E /* memory.c in Sources */ = {isa = PBXBuildFile; fileRef = 26B6C4BB239B6E9B00304B8E /* memory.c */; };
 		26B6C4BF239B714500304B8E /* debug.c in Sources */ = {isa = PBXBuildFile; fileRef = 26B6C4BE239B714500304B8E /* debug.c */; };
+		26B6C4C2239BA06D00304B8E /* value.c in Sources */ = {isa = PBXBuildFile; fileRef = 26B6C4C1239BA06D00304B8E /* value.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,6 +38,8 @@
 		26B6C4BB239B6E9B00304B8E /* memory.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = memory.c; sourceTree = "<group>"; };
 		26B6C4BD239B714500304B8E /* debug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
 		26B6C4BE239B714500304B8E /* debug.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = debug.c; sourceTree = "<group>"; };
+		26B6C4C0239BA06D00304B8E /* value.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = value.h; sourceTree = "<group>"; };
+		26B6C4C1239BA06D00304B8E /* value.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = value.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +73,8 @@
 			isa = PBXGroup;
 			children = (
 				26B6C4AD239B601200304B8E /* main.c */,
+				26B6C4C0239BA06D00304B8E /* value.h */,
+				26B6C4C1239BA06D00304B8E /* value.c */,
 				26B6C4BD239B714500304B8E /* debug.h */,
 				26B6C4BE239B714500304B8E /* debug.c */,
 				26B6C4B4239B6D6B00304B8E /* common.c */,
@@ -142,6 +147,7 @@
 				26B6C4B9239B6E5800304B8E /* chunk.c in Sources */,
 				26B6C4BF239B714500304B8E /* debug.c in Sources */,
 				26B6C4B5239B6D6B00304B8E /* common.c in Sources */,
+				26B6C4C2239BA06D00304B8E /* value.c in Sources */,
 				26B6C4BC239B6E9B00304B8E /* memory.c in Sources */,
 				26B6C4AE239B601200304B8E /* main.c in Sources */,
 			);
