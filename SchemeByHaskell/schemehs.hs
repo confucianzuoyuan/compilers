@@ -14,9 +14,14 @@ main :: IO ()
 main = do args <- getArgs
           if null args then runRepl else runOne $ args
 
+-- Parser Monad
 symbol :: Parser Char
 symbol = oneOf "!$%&|*+-/:<=?>@^_~#"
 
+type ThrowsError = Either LispError
+
+-- ThrowsError a 相当于 Either LispError a
+-- return 用来将val类型提升为Parser Monad类型
 readOrThrow :: Parser a -> String -> ThrowsError a
 readOrThrow parser input = case parse parser "lisp" input of
     Left err -> throwError $ Parser err
@@ -58,6 +63,8 @@ parseAtom = do
                           "#f" -> Bool False
                           _    -> Atom atom
 
+-- Unfortunately, the result of many1 digit is actually a Parser String, so our combined Number . read still can't operate on it. We need a way to tell it to just operate on the value inside the monad, giving us back a Parser LispVal. The standard function liftM does exactly that, so we apply liftM to our Number . read function, and then apply the result of that to our parser.
+-- 由于many1 digit返回值类型是Parser LispVal这样的Monad盒子，而(Number . read)操作的是monad盒子里面的值并返回Parser LispVal类型，为了让(Number . read)能操作monad盒子里面的值，我们使用liftM来做这件事情。
 parseNumber :: Parser LispVal
 parseNumber = liftM (Number . read) $ many1 digit
 
@@ -71,12 +78,14 @@ parseExpr = parseAtom
                char ')'
                return x
 
+-- sepBy parseExpr spaces返回值是Parser Monad，List可以操作monad盒子里的值并返回Parser LispVal类型，为了让List能操作monad盒子里的值，我们用了liftM来做这件事情。
 parseList :: Parser LispVal
 parseList = liftM List $ sepBy parseExpr spaces
 
 parseDottedList :: Parser LispVal
 parseDottedList = do
     head <- endBy parseExpr spaces
+    -- 先匹配"."，然后用spaces解析，然后用parseExpr解析
     tail <- char '.' >> spaces >> parseExpr
     return $ DottedList head tail
 
@@ -102,9 +111,12 @@ showVal (Func {params = args, vararg = varargs, body = body, closure = env}) =
           Nothing -> ""
           Just arg -> " . " ++ arg) ++ ") ...)"
 
+-- point-free风格的函数写法，函数定义里面没有输入参数
 unwordsList :: [LispVal] -> String
+-- unwords将字符串用空格拼接起来
 unwordsList = unwords . map showVal
 
+-- LispVal是Show的一个实例，这样就能使用showVal将LispVal类型转换成字符串了。
 instance Show LispVal where show = showVal
 
 eval :: Env -> LispVal -> IOThrowsError LispVal
@@ -213,8 +225,6 @@ showError (TypeMismatch expected found) = "Invalid type: expected " ++ expected
 showError (Parser parseErr) = "Parse error at " ++ show parseErr
 
 instance Show LispError where show = showError
-
-type ThrowsError = Either LispError
 
 trapError action = catchError action (return . show)
 
