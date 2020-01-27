@@ -37,7 +37,6 @@ public class Main {
         // 打印抽象语法树
         try {
             result = (Exp) p.parse().value;
-            System.out.println("=========");
         } catch (Exception e) {
             e.printStackTrace();
         }
