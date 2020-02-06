@@ -2,8 +2,12 @@ package Main;
 
 import java.io.*;
 import Absyn.*;
+import Frame.Frame;
+import MIPS.MipsFrame;
+import Semant.Semant;
 import Tiger.errormsg.ErrorMsg;
 import Tiger.parse.*;
+import Translate.Translate;
 
 public class Main {
     public static void main(String[] args) throws java.io.IOException {
@@ -43,7 +47,19 @@ public class Main {
         Print pr = new Print(System.out);
         pr.prExp((Exp) result, 0);
         System.out.println("\n");
-        out.close();
+
+        Frame frame = new MipsFrame();
+        Translate translator = new Translate(frame);
+        // 语义分析
+        Semant smt = new Semant(translator, errorMsg);
+        Frag.Frag frags = smt.transProg(result);
+
+        if (!ErrorMsg.anyErrors)
+            System.out.println("无语义语法错误");
+        else
+            return;
+
+//        out.close();
     }
 
     static String symnames[] = new String[100];
